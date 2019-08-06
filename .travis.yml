@@ -10,7 +10,7 @@ addons:
   apt:
     packages:
       - musl-tools
-      - xorg-dev
+      - libx11-xcb-dev
 
 matrix:
   allow_failures:
