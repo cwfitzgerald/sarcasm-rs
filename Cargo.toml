@@ -10,6 +10,8 @@ default-members = ["sarcasm-utils"]
 
 [dependencies]
 clipboard = "0.5.0"
+chrono = "0.4.7"
+fern = { version = "0.5.8", features = ["colored"] }
 log = "0.4.8"
 sarcasm-utils = { version = "0.1.0", path = "sarcasm-utils" }
 structopt = "0.2.18"
