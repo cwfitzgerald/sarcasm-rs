@@ -1,5 +1,6 @@
 use crate::StartingCase;
 use itertools::Itertools;
+use log::{debug, info, trace};
 
 #[inline]
 fn encode_lower(input: &str) -> String {
@@ -18,8 +19,22 @@ fn encode_upper(input: &str) -> String {
 }
 
 pub fn encode_sarcasm(input: &str, start: StartingCase) -> String {
-    match start {
-        StartingCase::Lowercase => encode_lower(input),
-        StartingCase::Uppercase => encode_upper(input),
-    }
+    info!("Encoding {} bytes to sarcasm", input.len());
+    trace!("Encoding input: {}", input);
+
+    let result = match start {
+        StartingCase::Lowercase => {
+            debug!("Encoding as lOwErCaSe SaRcAsM tExT");
+            encode_lower(input)
+        }
+        StartingCase::Uppercase => {
+            debug!("Encoding as lOwErCaSe SaRcAsM tExT");
+            encode_upper(input)
+        }
+    };
+
+    info!("Encoded {} bytes successfully", result.len());
+    trace!("Encoding output: {}", result);
+
+    result
 }
