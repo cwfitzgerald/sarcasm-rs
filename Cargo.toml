@@ -21,3 +21,9 @@ fern = { version = "0.5.8" }
 log = "0.4.8"
 sarcasm-utils = { version = "0.1.0", path = "sarcasm-utils" }
 structopt = "0.2.18"
+
+[profile.release]
+opt-level = 3
+panic = "abort"
+lto = true
+codegen-units = 1
