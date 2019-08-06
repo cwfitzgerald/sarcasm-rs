@@ -1,7 +1,9 @@
 //! Command line wrapper for sarcasm-utils
 
-#![deny(nonstandard_style)]
+#![deny(clippy::cargo_common_metadata)]
+#![deny(clippy::wildcard_dependencies)]
 #![deny(future_incompatible)]
+#![deny(nonstandard_style)]
 #![deny(rust_2018_idioms)]
 #![deny(unsafe_code)]
 #![warn(missing_docs)]
@@ -22,8 +24,8 @@ use structopt::StructOpt;
 #[structopt(name = "sarcasm")]
 /// A tool to generate and validate SaRcAsM TeXt.
 ///
-/// While the program itself is a joke, it is designed to be a fully robust program and library that you can use
-/// anywhere in real projects, if you had any actual need.
+/// While the program itself is a bit pointless, it is designed to be a fully robust program
+/// and library that you can use anywhere in real projects, if you had any actual need.
 pub struct Options {
     /// Output uppercase SaRcAsM TeXt
     #[structopt(short, long, group = "case")]
@@ -46,7 +48,6 @@ pub struct Options {
     verbose: u8,
 
     /// Full verbosity log file. Appends to end.
-    ///
     /// Always sends warnings and errors to stderr.
     #[structopt(long = "log", parse(from_os_str))]
     log_file: Option<PathBuf>,

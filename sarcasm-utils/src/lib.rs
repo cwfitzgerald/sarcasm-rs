@@ -14,7 +14,7 @@
 //!
 //! For more details, see [`encode_sarcasm`] and [`is_sarcasm`].
 //!
-//! ```edition2018
+//! ```rust,edition2018
 //! use sarcasm_utils::{StartingCase, is_sarcasm, IsSarcasm};
 //! use sarcasm_utils::encode_sarcasm;
 //!
@@ -45,12 +45,16 @@
 //!
 //! # Really?
 //!
-//! Okay, yes the purpose is silly, but this was an exersize in writing a library in rust
+//! Okay, yes the purpose is silly, but this was an exercise in writing a library in rust
 //! that is designed to be robust yet easy to use. Also, it does provide some (minimal) use for
 //! someone who wants to do this kind of thing. I will do my best to maintain and attend to this
 //! library, as well as expand it with new "useful" features in the future.
 //!
 //! In short: maybe?
+//!
+//! # Be Nice
+//!
+//! Don't use this library to be jerks to people. It ruins the fun.
 
 #![deny(nonstandard_style)]
 #![deny(future_incompatible)]
