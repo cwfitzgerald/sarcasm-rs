@@ -36,7 +36,7 @@ matrix:
 cache: cargo
 
 install:
-  - export TC="$TRAVIS_RUST_VERSION"_$TARGET
+  - export TC="$TRAVIS_RUST_VERSION"-$TARGET
   - rustup toolchain install $TC
   - |
     if [[ "$TRAVIS_PULL_REQUEST" != "false" ]] || [[ "$TRAVIS_BRANCH" == "master" ]]; then
@@ -44,7 +44,7 @@ install:
     fi
 
 script:
-  - export TC="$TRAVIS_RUST_VERSION"_$TARGET
+  - export TC="$TRAVIS_RUST_VERSION"-$TARGET
   - cargo +$TC audit
   - cargo +$TC build --verbose --all
   - cargo +$TC test --verbose --all --no-fail-fast
