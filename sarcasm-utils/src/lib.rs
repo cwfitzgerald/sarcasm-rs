@@ -20,12 +20,17 @@ pub enum StartingCase {
 
 impl From<char> for StartingCase {
     fn from(c: char) -> Self {
+        trace!("Analyzing case of leading char {}", c);
         if c.is_lowercase() {
+            debug!("Leading character {} is lowercase", c);
             StartingCase::Lowercase
         } else if c.is_uppercase() {
+            debug!("Leading character {} is uppercase", c);
             StartingCase::Uppercase
         } else {
-            panic!("Invalid char {} provided to From<char> for StartingCase", c);
+            let msg = format!("Invalid char {} provided to From<char> for StartingCase", c);
+            error!("{}", msg);
+            StartingCase::Uppercase
         }
     }
 }
