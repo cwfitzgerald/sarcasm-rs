@@ -13,6 +13,7 @@ mod create;
 
 use crate::{check::*, create::*};
 
+use chrono::SecondsFormat;
 use log::{debug, info, trace, warn, Level, LevelFilter};
 use std::{path::PathBuf, process};
 use structopt::StructOpt;
@@ -45,6 +46,8 @@ pub struct Options {
     verbose: u8,
 
     /// Full verbosity log file. Appends to end.
+    ///
+    /// Always sends warnings and errors to stderr.
     #[structopt(long = "log", parse(from_os_str))]
     log_file: Option<PathBuf>,
 
@@ -56,7 +59,7 @@ pub struct Options {
     text: Vec<String>,
 }
 
-fn setup_logger(level: u8) -> Result<(), fern::InitError> {
+fn setup_logger(level: u8, log_file: &Option<PathBuf>) -> Result<(), fern::InitError> {
     let level = match level {
         0 => LevelFilter::Warn,
         1 => LevelFilter::Info,
@@ -64,34 +67,55 @@ fn setup_logger(level: u8) -> Result<(), fern::InitError> {
         _ => LevelFilter::Trace,
     };
 
-    let stdout = fern::Dispatch::new()
-        .filter(|m| m.level() > Level::Warn)
-        .level(LevelFilter::Trace)
-        .chain(std::io::stdout());
-
     let stderr = fern::Dispatch::new().level(LevelFilter::Warn).chain(std::io::stderr());
 
-    fern::Dispatch::new()
-        .format(|out, message, record| {
-            out.finish(format_args!(
-                "{}[{}][{}] {}",
-                chrono::Local::now().format("[%Y-%m-%d][%H:%M:%S%.6f]"),
-                record.target(),
-                record.level(),
-                message
-            ))
-        })
-        .level(level)
-        .chain(stderr)
-        .chain(stdout)
-        .apply()?;
+    match log_file {
+        Some(file) => {
+            let file = fern::log_file(file)?;
+
+            fern::Dispatch::new()
+                .format(|out, message, record| {
+                    out.finish(format_args!(
+                        "[{}][{}][{}] {}",
+                        chrono::Utc::now().to_rfc3339_opts(SecondsFormat::Micros, true),
+                        record.target(),
+                        record.level(),
+                        message
+                    ))
+                })
+                .chain(file)
+                .chain(stderr)
+                .apply()?;
+        }
+        None => {
+            let stdout = fern::Dispatch::new()
+                .filter(|m| m.level() > Level::Warn)
+                .level(LevelFilter::Trace)
+                .chain(std::io::stdout());
+
+            fern::Dispatch::new()
+                .format(|out, message, record| {
+                    out.finish(format_args!(
+                        "{}[{}][{}] {}",
+                        chrono::Local::now().format("[%Y-%m-%d][%H:%M:%S%.6f]"),
+                        record.target(),
+                        record.level(),
+                        message
+                    ))
+                })
+                .level(level)
+                .chain(stderr)
+                .chain(stdout)
+                .apply()?;
+        }
+    }
 
     Ok(())
 }
 
 fn main() {
     let opt: Options = Options::from_args();
-    if let Err(err) = setup_logger(opt.verbose) {
+    if let Err(err) = setup_logger(opt.verbose, &opt.log_file) {
         eprintln!("Error initializing logger. {:?}", err);
         process::exit(1);
     }
