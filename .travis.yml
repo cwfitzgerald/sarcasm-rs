@@ -3,7 +3,7 @@ dist: xenial
 
 env:
   global:
-    - PROJECT_NAME: ripgrep
+    - PROJECT_NAME: sarcasm
     - RUST_BACKTRACE: full
 
 addons:
@@ -21,9 +21,6 @@ matrix:
     - os: osx
       rust: stable
       env: TARGET=x86_64-apple-darwin
-    - os: linux
-      rust: stable
-      env: TARGET=x86_64-unknown-linux-musl
     - os: linux
       rust: stable
       env: TARGET=x86_64-unknown-linux-gnu
@@ -46,13 +43,12 @@ install:
 
 script:
   - export TC="$TRAVIS_RUST_VERSION"-$TARGET
-  - cargo +$TC audit
   - cargo +$TC build --verbose --all
   - cargo +$TC test --verbose --all --no-fail-fast
   - cargo +$TC doc --verbose --all --no-deps
   - |
     if [[ "$TRAVIS_PULL_REQUEST" != "false" ]] || [[ "$TRAVIS_BRANCH" == "master" ]]; then
-        cargo +$TC clippy --verbose --all --all-targets -- -D warnings;
+        cargo +$TC clippy --verbose --all -- -D warnings;
         cargo +$TC fmt --verbose --all -- --check;
     fi
 

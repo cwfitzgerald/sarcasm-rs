@@ -10,7 +10,6 @@ environment:
     PROJECT_NAME: sarcasm
     RUST_BACKTRACE: full
   matrix:
-
     # Stable 64-bit MSVC
     - channel: stable
       target: x86_64-pc-windows-msvc
@@ -40,9 +39,9 @@ cache:
   - 'target -> rust-toolchain,.appveyor.yml'
 
 test_script:
-  - cargo build --verbose --all --all-targets %cargoflags%
-  - cargo test --verbose --all --all-targets --no-fail-fast %cargoflags%
-  - cargo doc --verbose --all --no-deps %cargoflags%
+  - cargo build --verbose --all
+  - cargo test --verbose --all --no-fail-fast
+  - cargo doc --verbose --all --no-deps
 
 before_deploy:
   - cargo build --release --package sarcasm --bin sarcasm
