@@ -1,0 +1,71 @@
+language: rust
+dist: xenial
+
+rust:
+  - stable
+  - beta
+  - nightly
+
+env:
+  global:
+    - PROJECT_NAME: ripgrep
+    - RUST_BACKTRACE: full
+
+addons:
+  apt:
+    packages:
+      - musl-tools
+
+matrix:
+  allow_failures:
+    - rust: beta
+    - rust: nightly
+  fast_finish: true
+  include:
+    - os: osx
+      rust: stable
+      env: TARGET=x86_64-apple-darwin
+    - os: linux
+      rust: stable
+      env: TARGET=x86_64-unknown-linux-musl
+    - os: linux
+      rust: stable
+      env: TARGET=x86_64-unknown-linux-gnu
+
+cache: cargo
+
+install:
+  - rustup toolchain install $TARGET
+  - |
+    if [[ "$TRAVIS_PULL_REQUEST" != "false" ]] || [[ "$TRAVIS_BRANCH" == "master" ]]; then
+        rustup component add --toolchain $TARGET clippy rustfmt;
+    fi
+
+script:
+  - cargo audit
+  - cargo build --verbose --all
+  - cargo test --verbose --all --no-fail-fast
+  - cargo doc --verbose --all --no-deps
+  - |
+    if [[ "$TRAVIS_PULL_REQUEST" != "false" ]] || [[ "$TRAVIS_BRANCH" == "master" ]]; then
+        cargo clippy --verbose --all --all-targets -- -D warnings;
+        cargo fmt --verbose --all -- --check;
+    fi
+
+before_deploy:
+  - strip target/release/sarcasm
+  - mkdir -p staging/
+  - cp target/release/sarcasm staging/
+  - cd staging
+  - tar czf ../${PROJECT_NAME}-${TRAVIS_TAG}-${TARGET}.tar.gz ./*
+  - cd ..
+
+deploy:
+  provider: releases
+  file: deployment/${PROJECT_NAME}-${TRAVIS_TAG}-${TARGET}.tar.gz
+  skip_cleanup: true
+  on:
+    branch: master
+    tags: true
+  api_key:
+    secure: "kmKhFsrPl6tMWmQzzUYTNc45gwyul1r7Luu9PhJpewxtMhxHgIwLDVGHhAEU7i2IJxURO365xhWaSx8FXcfVGfhhvsHkus/VU6poL1GSdhe1089M7h5eaBdjX/VmfxjYVPd1zkHW5M43CveWIIZRckWiUOerglvS89Ilb2Ztn+NBXKoXebaiRHbo3H9Iuc6zEV9wTcm+PEC6wGuCYlCNydR8/WHjne4sPztLS3At6smQGwNLzvwIXuWt5Wkxab5HAn568aKP2r4JXShZCCPbwVdINrzbzIK/i/P5OBQQ1DyYoM2H7NmWqEJpVTdGmtk5S8P8TNK3PsWNJqp/gzQds7vFG2ChzNduiNqCFgeZywV6MNEEXaZ/bcFO2miLHo/DoACbWw6zjTvm41/ZvWisSX5sC3pmWAxaOCLmX5uA8BSDQq1A9oNQOqapUSdTXoNWjuonSjnn2wCO3sKQ9eQ7dJfIbLIXIjKLrarDC24lCDPsGcja4SHzu2vDRDurjyzH3afwHjeirSA1uNuVfvCfqgfqIzHmKEAUUWsgcoS6A1FWfWNv9JlS169QGNi3ayKhzY0Q3Ns24rpQ4HbY7tcQSDREZdKooYjgoFe/3MCiKcMUkA/f6BeIoFfRZn1Eoq/7xDXh8TyfAau7HGjTKWfd4UWBVWnO7DuPZNzcHIqaYE0="

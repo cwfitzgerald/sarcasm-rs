@@ -60,4 +60,3 @@ deploy:
   on:
     target: x86_64-pc-windows-msvc
     appveyor_repo_tag: true
-
