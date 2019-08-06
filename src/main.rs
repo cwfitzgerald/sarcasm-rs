@@ -14,7 +14,7 @@ mod create;
 use crate::{check::*, create::*};
 
 use log::{debug, info, trace, warn, Level, LevelFilter};
-use std::process;
+use std::{path::PathBuf, process};
 use structopt::StructOpt;
 
 #[derive(StructOpt, Debug)]
@@ -43,6 +43,14 @@ pub struct Options {
     /// Log output level (-v, -vv, -vvv)
     #[structopt(short, long, parse(from_occurrences))]
     verbose: u8,
+
+    /// Full verbosity log file. Appends to end.
+    #[structopt(long = "log", parse(from_os_str))]
+    log_file: Option<PathBuf>,
+
+    /// Output to a file instead of standard out.
+    #[structopt(short, long, parse(from_os_str))]
+    output: Option<PathBuf>,
 
     /// Text to process
     text: Vec<String>,

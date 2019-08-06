@@ -18,6 +18,24 @@ fn encode_upper(input: &str) -> String {
     first.interleave(second).collect()
 }
 
+/// Transform normal text into SaRcAsM text.
+///
+/// # Arguments
+///
+/// - `input` - Input string to be transformed.
+/// - `start` - The case of the first letter in the SaRcAsM text.
+///
+/// # Returns
+///
+/// Fully transformed string.
+///
+/// # Examples
+///
+/// ```edition2018
+/// # use sarcasm_utils::{encode_sarcasm, StartingCase};
+/// assert_eq!(encode_sarcasm("Hello World!", StartingCase::Uppercase), "HeLlO WoRlD!");
+/// assert_eq!(encode_sarcasm("Hello World!", StartingCase::Lowercase), "hElLo wOrLd!");
+/// ```
 pub fn encode_sarcasm(input: &str, start: StartingCase) -> String {
     info!("Encoding {} bytes to sarcasm", input.len());
     trace!("Encoding input: {}", input);
