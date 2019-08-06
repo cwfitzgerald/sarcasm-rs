@@ -1,7 +1,6 @@
 language: rust
 dist: xenial
 
-
 env:
   global:
     - PROJECT_NAME: ripgrep
@@ -37,21 +36,23 @@ matrix:
 cache: cargo
 
 install:
-  - rustup toolchain install $TARGET
+  - export TC="$TRAVIS_RUST_VERSION"_$TARGET
+  - rustup toolchain install $TC
   - |
     if [[ "$TRAVIS_PULL_REQUEST" != "false" ]] || [[ "$TRAVIS_BRANCH" == "master" ]]; then
-        rustup component add --toolchain $TARGET clippy rustfmt;
+        rustup component add --toolchain $TC clippy rustfmt;
     fi
 
 script:
-  - cargo audit
-  - cargo build --verbose --all
-  - cargo test --verbose --all --no-fail-fast
-  - cargo doc --verbose --all --no-deps
+  - export TC="$TRAVIS_RUST_VERSION"_$TARGET
+  - cargo +$TC audit
+  - cargo +$TC build --verbose --all
+  - cargo +$TC test --verbose --all --no-fail-fast
+  - cargo +$TC doc --verbose --all --no-deps
   - |
     if [[ "$TRAVIS_PULL_REQUEST" != "false" ]] || [[ "$TRAVIS_BRANCH" == "master" ]]; then
-        cargo clippy --verbose --all --all-targets -- -D warnings;
-        cargo fmt --verbose --all -- --check;
+        cargo +$TC clippy --verbose --all --all-targets -- -D warnings;
+        cargo +$TC fmt --verbose --all -- --check;
     fi
 
 before_deploy:
@@ -67,6 +68,7 @@ deploy:
   file: deployment/${PROJECT_NAME}-${TRAVIS_TAG}-${TARGET}.tar.gz
   skip_cleanup: true
   on:
+    condition: $TRAVIS_RUST_VERSION = stable
     branch: master
     tags: true
   api_key:
