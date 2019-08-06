@@ -3,6 +3,7 @@ name = "sarcasm"
 version = "0.1.0"
 authors = ["Connor Fitzgerald <connorwadefitzgerald@gmail.com>"]
 edition = "2018"
+license = "MIT"
 repository = "https://github.com/cwfitzgerald/sarcasm-rs"
 readme = "README.md"
 description = "SaRcAsM tExT creation and validation library."
