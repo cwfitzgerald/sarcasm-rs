@@ -1,0 +1,15 @@
+[package]
+name = "sarcasm"
+version = "0.1.0"
+authors = ["Connor Fitzgerald <connorwadefitzgerald@gmail.com>"]
+edition = "2018"
+
+[workspace]
+members = ["sarcasm-utils"]
+default-members = ["sarcasm-utils"]
+
+[dependencies]
+clipboard = "0.5.0"
+log = "0.4.8"
+sarcasm-utils = { version = "0.1.0", path = "sarcasm-utils" }
+structopt = "0.2.18"
