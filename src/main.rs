@@ -159,12 +159,9 @@ fn create(opt: &Options, full_text: &str) -> i32 {
 
 fn main() {
     let opt: Options = Options::from_args();
-    match setup_logger(opt.verbose) {
-        Err(err) => {
-            eprintln!("Error initializing logger. {:?}", err);
-            process::exit(1);
-        }
-        _ => {}
+    if let Err(err) = setup_logger(opt.verbose) {
+        eprintln!("Error initializing logger. {:?}", err);
+        process::exit(1);
     }
 
     info!("Verbosity level {}", opt.verbose);

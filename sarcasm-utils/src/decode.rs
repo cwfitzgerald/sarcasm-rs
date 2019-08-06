@@ -1,7 +1,6 @@
 use crate::StartingCase;
 use itertools::Itertools;
 use log::{debug, info, trace};
-use std::convert::identity;
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub enum IsSarcasm {
@@ -10,6 +9,7 @@ pub enum IsSarcasm {
     TooShort,
 }
 
+#[inline]
 fn different_case((l, r): (char, char)) -> bool {
     let result = if l.is_lowercase() {
         r.is_uppercase()
@@ -35,9 +35,9 @@ pub fn is_sarcasm(input: &str) -> IsSarcasm {
         Some(&c) => {
             trace!("Iterator has at least one alphanumeric character");
             let grouped = iter.group_by(|c| c.is_alphabetic());
-            let grouped_filtered = grouped.into_iter().filter(|(key, group)| *key == true).map(|(_, g)| g);
+            let grouped_filtered = grouped.into_iter().filter(|(key, _group)| *key).map(|(_, group)| group);
             let sarcasm: bool = grouped_filtered
-                .map(|g| g.tuple_windows().map(different_case).all(identity))
+                .map(|g| g.tuple_windows().all(different_case))
                 .enumerate()
                 .all(|(i, b)| {
                     if b {
