@@ -107,10 +107,10 @@ fn create(opt: &Options, full_text: &str) -> i32 {
     }
 
     let case = if opt.lowercase {
-        debug!("Creating lOwErCaSe SaRcAsM text");
+        debug!("Creating lOwErCaSe SaRcAsM tExT");
         StartingCase::Lowercase
     } else {
-        debug!("Creating UpPeRcAsE sArCaSm text");
+        debug!("Creating UpPeRcAsE sArCaSm tExT");
         StartingCase::Uppercase
     };
 
@@ -121,14 +121,13 @@ fn create(opt: &Options, full_text: &str) -> i32 {
         "Output size is {:0<.3}x input",
         full_text.len() as f32 / result_len as f32
     );
-    println!("{}", result);
 
     debug!("Attempting to create clipboard context");
     let provider: Result<ClipboardContext, _> = ClipboardProvider::new();
     match provider {
         Ok(mut clipboard) => {
             debug!("Created clipboard context successfully");
-            match clipboard.set_contents(result) {
+            match clipboard.set_contents(result.clone()) {
                 Ok(()) => {
                     info!("Copied {} bytes to clipboard", result_len);
                 }
@@ -151,6 +150,9 @@ fn create(opt: &Options, full_text: &str) -> i32 {
             }
         }
     }
+
+    trace!("Printing {} bytes and bailing", result_len);
+    println!("{}", result);
 
     0
 }
