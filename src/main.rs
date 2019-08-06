@@ -13,7 +13,7 @@ use structopt::StructOpt;
 
 #[derive(StructOpt, Debug)]
 #[structopt(name = "sarcasm")]
-/// A joke program to generate and validate SaRcAsM TeXt.
+/// A tool to generate and validate SaRcAsM TeXt.
 ///
 /// While the program itself is a joke, it is designed to be a fully robust program and library that you can use
 /// anywhere in real projects, if you had any actual need.
