@@ -1,3 +1,5 @@
+//! Command line wrapper for sarcasm-utils
+
 #![deny(nonstandard_style)]
 #![deny(future_incompatible)]
 #![deny(rust_2018_idioms)]
@@ -5,9 +7,13 @@
 #![warn(missing_docs)]
 #![warn(unused)]
 
-use clipboard::{ClipboardContext, ClipboardProvider};
-use log::{debug, error, info, trace, warn, Level, LevelFilter};
-use sarcasm_utils::{encode_sarcasm, is_sarcasm, IsSarcasm, StartingCase};
+mod check;
+mod clipboard;
+mod create;
+
+use crate::{check::*, create::*};
+
+use log::{debug, info, trace, warn, Level, LevelFilter};
 use std::process;
 use structopt::StructOpt;
 
@@ -17,7 +23,7 @@ use structopt::StructOpt;
 ///
 /// While the program itself is a joke, it is designed to be a fully robust program and library that you can use
 /// anywhere in real projects, if you had any actual need.
-struct Options {
+pub struct Options {
     /// Output uppercase SaRcAsM TeXt
     #[structopt(short, long, group = "case")]
     uppercase: bool,
@@ -73,88 +79,6 @@ fn setup_logger(level: u8) -> Result<(), fern::InitError> {
         .apply()?;
 
     Ok(())
-}
-
-fn check(full_text: &str) -> i32 {
-    info!("Validating input text");
-
-    match is_sarcasm(full_text) {
-        IsSarcasm::Yes(StartingCase::Uppercase) => {
-            println!("Yes, this is UpPeRcAsE sArCaSm!");
-            0
-        }
-        IsSarcasm::Yes(StartingCase::Lowercase) => {
-            println!("Yes, this is lOwErCaSe SaRcAsM!");
-            0
-        }
-        IsSarcasm::No => {
-            println!("No, this is not sarcasm!");
-            1
-        }
-        IsSarcasm::TooShort => {
-            println!("I can't tell if this is sarcasm!");
-            2
-        }
-    }
-}
-
-fn create(opt: &Options, full_text: &str) -> i32 {
-    info!("Creating SaRcAsM tExT from normal text");
-
-    if full_text.is_empty() {
-        error!("Nothing to sarcasm-ise!");
-        return 1;
-    }
-
-    let case = if opt.lowercase {
-        debug!("Creating lOwErCaSe SaRcAsM tExT");
-        StartingCase::Lowercase
-    } else {
-        debug!("Creating UpPeRcAsE sArCaSm tExT");
-        StartingCase::Uppercase
-    };
-
-    let result = encode_sarcasm(&full_text, case);
-    let result_len = result.len();
-    trace!("Output byte length is {}", result_len);
-    trace!(
-        "Output size is {:0<.3}x input",
-        full_text.len() as f32 / result_len as f32
-    );
-
-    debug!("Attempting to create clipboard context");
-    let provider: Result<ClipboardContext, _> = ClipboardProvider::new();
-    match provider {
-        Ok(mut clipboard) => {
-            debug!("Created clipboard context successfully");
-            match clipboard.set_contents(result.clone()) {
-                Ok(()) => {
-                    info!("Copied {} bytes to clipboard", result_len);
-                }
-                Err(error) => {
-                    let message = format!("Error setting clipboard contents. Error: {:#?}", error);
-                    if opt.clipboard {
-                        warn!("{}", message);
-                    } else {
-                        info!("{}", message);
-                    }
-                }
-            }
-        }
-        Err(error) => {
-            let message = format!("Cannot create clipboard context. Error: {:#?}", error);
-            if opt.clipboard {
-                warn!("{}", message);
-            } else {
-                info!("{}", message);
-            }
-        }
-    }
-
-    trace!("Printing {} bytes and bailing", result_len);
-    println!("{}", result);
-
-    0
 }
 
 fn main() {
