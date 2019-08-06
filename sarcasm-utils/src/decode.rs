@@ -1,5 +1,6 @@
 use crate::StartingCase;
 use itertools::Itertools;
+use log::{debug, info, trace};
 use std::convert::identity;
 
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -18,9 +19,12 @@ fn different_case((l, r): (char, char)) -> bool {
 }
 
 pub fn is_sarcasm(input: &str) -> IsSarcasm {
-    let mut iter = input.chars().skip_while(|c| !c.is_alphabetic());
-    match iter.next() {
-        Some(c) => {
+    debug!("Checking sarcasm on {} bytes", input.len());
+    trace!("Checking sarcasm on input: {}", input);
+
+    let mut iter = input.chars().skip_while(|c| !c.is_alphabetic()).peekable();
+    match iter.peek() {
+        Some(&c) => {
             let grouped = iter.group_by(|c| c.is_alphabetic());
             let grouped_filtered = grouped.into_iter().filter(|(key, group)| *key == true).map(|(_, g)| g);
             let sarcasm: bool = grouped_filtered

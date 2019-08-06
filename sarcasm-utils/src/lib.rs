@@ -10,6 +10,7 @@ mod encode;
 
 pub use decode::*;
 pub use encode::*;
+use log::{debug, error, trace};
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub enum StartingCase {
@@ -87,5 +88,11 @@ mod tests {
     fn negatives_decode() {
         assert_eq!(crate::is_sarcasm("Not Sarcasm"), IsSarcasm::No);
         assert_eq!(crate::is_sarcasm("NoT SaRcASM"), IsSarcasm::No);
+    }
+
+    #[test]
+    fn first_character_decode() {
+        assert_eq!(crate::is_sarcasm("heLlO!"), IsSarcasm::No);
+        assert_eq!(crate::is_sarcasm("HElLo!"), IsSarcasm::No);
     }
 }
