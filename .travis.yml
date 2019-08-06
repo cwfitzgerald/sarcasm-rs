@@ -1,10 +1,6 @@
 language: rust
 dist: xenial
 
-rust:
-  - stable
-  - beta
-  - nightly
 
 env:
   global:
@@ -30,6 +26,12 @@ matrix:
       env: TARGET=x86_64-unknown-linux-musl
     - os: linux
       rust: stable
+      env: TARGET=x86_64-unknown-linux-gnu
+    - os: linux
+      rust: beta
+      env: TARGET=x86_64-unknown-linux-gnu
+    - os: linux
+      rust: nightly
       env: TARGET=x86_64-unknown-linux-gnu
 
 cache: cargo
