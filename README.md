@@ -11,7 +11,7 @@ your chat message box or CMS of choice. Offers full unicode support as offered b
 - [Install](#install)
 - [All Options](#all-options)
 - [Why?](#why)
-- [Be Nice?](#be-nice)
+- [Be Nice](#be-nice)
 
 ## Usage
 
