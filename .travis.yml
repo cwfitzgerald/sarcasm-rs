@@ -63,7 +63,7 @@ before_deploy:
 
 deploy:
   provider: releases
-  file: deployment/${PROJECT_NAME}-${TRAVIS_TAG}-${TARGET}.tar.gz
+  file: ${PROJECT_NAME}-${TRAVIS_TAG}-${TARGET}.tar.gz
   skip_cleanup: true
   on:
     condition: $TRAVIS_RUST_VERSION = stable
