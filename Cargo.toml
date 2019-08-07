@@ -10,6 +10,13 @@ description = "SaRcAsM tExT creation and validation library."
 homepage = "https://github.com/cwfitzgerald/sarcasm-rs"
 categories = ["text-processing", "value-formatting", "encoding", "localization"]
 keywords = ["fun", "sarcasm", "text", "encoding", "decoding"]
+exclude = [
+    "rust-toolchain",
+    ".appveyor.yml",
+    ".gitignore",
+    ".rustfmt.toml",
+    ".travis.yml",
+]
 
 [workspace]
 members = ["sarcasm-utils"]
