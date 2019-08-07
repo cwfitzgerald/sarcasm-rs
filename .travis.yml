@@ -24,7 +24,7 @@ matrix:
       env: TARGET=x86_64-apple-darwin
     - os: linux
       rust: stable
-      env: TARGET=x86_64-unknown-linux-gnu
+      env: TARGET=x86_64-unknown-linux-gnu CARGO_DEPLOY=1
     - os: linux
       rust: beta
       env: TARGET=x86_64-unknown-linux-gnu
@@ -64,12 +64,19 @@ before_deploy:
   - cd ..
 
 deploy:
-  provider: releases
-  file: ${PROJECT_NAME}-${TRAVIS_TAG}-${TARGET}.tar.gz
-  skip_cleanup: true
-  on:
-    condition: $TRAVIS_RUST_VERSION = stable
-    branch: master
-    tags: true
-  api_key:
-    secure: "kmKhFsrPl6tMWmQzzUYTNc45gwyul1r7Luu9PhJpewxtMhxHgIwLDVGHhAEU7i2IJxURO365xhWaSx8FXcfVGfhhvsHkus/VU6poL1GSdhe1089M7h5eaBdjX/VmfxjYVPd1zkHW5M43CveWIIZRckWiUOerglvS89Ilb2Ztn+NBXKoXebaiRHbo3H9Iuc6zEV9wTcm+PEC6wGuCYlCNydR8/WHjne4sPztLS3At6smQGwNLzvwIXuWt5Wkxab5HAn568aKP2r4JXShZCCPbwVdINrzbzIK/i/P5OBQQ1DyYoM2H7NmWqEJpVTdGmtk5S8P8TNK3PsWNJqp/gzQds7vFG2ChzNduiNqCFgeZywV6MNEEXaZ/bcFO2miLHo/DoACbWw6zjTvm41/ZvWisSX5sC3pmWAxaOCLmX5uA8BSDQq1A9oNQOqapUSdTXoNWjuonSjnn2wCO3sKQ9eQ7dJfIbLIXIjKLrarDC24lCDPsGcja4SHzu2vDRDurjyzH3afwHjeirSA1uNuVfvCfqgfqIzHmKEAUUWsgcoS6A1FWfWNv9JlS169QGNi3ayKhzY0Q3Ns24rpQ4HbY7tcQSDREZdKooYjgoFe/3MCiKcMUkA/f6BeIoFfRZn1Eoq/7xDXh8TyfAau7HGjTKWfd4UWBVWnO7DuPZNzcHIqaYE0="
+  - provider: releases
+    file: ${PROJECT_NAME}-${TRAVIS_TAG}-${TARGET}.tar.gz
+    skip_cleanup: true
+    on:
+      condition: $TRAVIS_RUST_VERSION = stable
+      branch: master
+      tags: true
+    api_key:
+      secure: "kmKhFsrPl6tMWmQzzUYTNc45gwyul1r7Luu9PhJpewxtMhxHgIwLDVGHhAEU7i2IJxURO365xhWaSx8FXcfVGfhhvsHkus/VU6poL1GSdhe1089M7h5eaBdjX/VmfxjYVPd1zkHW5M43CveWIIZRckWiUOerglvS89Ilb2Ztn+NBXKoXebaiRHbo3H9Iuc6zEV9wTcm+PEC6wGuCYlCNydR8/WHjne4sPztLS3At6smQGwNLzvwIXuWt5Wkxab5HAn568aKP2r4JXShZCCPbwVdINrzbzIK/i/P5OBQQ1DyYoM2H7NmWqEJpVTdGmtk5S8P8TNK3PsWNJqp/gzQds7vFG2ChzNduiNqCFgeZywV6MNEEXaZ/bcFO2miLHo/DoACbWw6zjTvm41/ZvWisSX5sC3pmWAxaOCLmX5uA8BSDQq1A9oNQOqapUSdTXoNWjuonSjnn2wCO3sKQ9eQ7dJfIbLIXIjKLrarDC24lCDPsGcja4SHzu2vDRDurjyzH3afwHjeirSA1uNuVfvCfqgfqIzHmKEAUUWsgcoS6A1FWfWNv9JlS169QGNi3ayKhzY0Q3Ns24rpQ4HbY7tcQSDREZdKooYjgoFe/3MCiKcMUkA/f6BeIoFfRZn1Eoq/7xDXh8TyfAau7HGjTKWfd4UWBVWnO7DuPZNzcHIqaYE0="
+  - provider: cargo
+    token:
+      secure: "P9cqhd9K2it0rdWwq84QL+pdAWto0wBOXt4MtVNsqIYl2UHIXBuPFrGTy5DE1BO9MnndDpfHUJKuLZNV7DMoLBdgmQiIA4R3jEDTDw6YSpPjw5AKcTyr1z8tqwc/1ngX2O82tOfOozcZg72bdcDNpba7AfNjZcYd1PPB1gAFnJyRMBLSacqSTbY3DfZHzUKZA1MnSCpoJ9iXyYXmQPco201ZRD7bkTMVg/izQJde355Z2wDhKZHjc0RlfAPgRAiGkcQZ6QkcUh/Im1zFRW1PC6/xfao+pVKJSvi0sgfcCTVH+PDYKWGx8+Ch+Fqo8+tfdXuiz7cz2lxP6YMYreUEo5iQ0cK2kLM6EurbYDlwyf4A0FU6E4dlu5H0zeyO/FK4V/ciTJyaw/dmEvZBmLDs4YqJH0AEoLN4N+KmdpKiRVLBo7pHYc8r9mqrKbMgdptMp7vz4dnqvdk3gtgvmHIgKczcvEn8pYjDyT5qhUG/U6NMe0qpa8x2ulWp08kvJH43+HMVlCH8KA0RKz2z5J6VuINBtLeAPefbzft4/o9x8ux+M0b+qsPW72Yt/N408r68Hu4ZsaHuluI1Jmv5SVpE649j8bpiDTXwb30oqSqlmlaPQSd2qP70genSie88n7VRIFIBgLdFTwG18FzIIhC0eOIJ8A4MwbB1nMRG2ZaAD6E="
+    on:
+      condition: $CARGO_DEPLOY = 1
+      branch: master
+      tags: true
