@@ -12,6 +12,8 @@ categories = ["text-processing", "value-formatting", "encoding", "localization"]
 keywords = ["fun", "sarcasm", "text", "encoding", "decoding"]
 
 [badges]
+appveyor = { repository = "cwfitzgerald/sarcasm-rs" }
+travis-ci = { repository = "cwfitzgerald/sarcasm-rs" }
 is-it-maintained-open-issues = { respository = "cwfitzgerald/sarcasm-rs" }
 is-it-maintained-issue-resolution = { respository = "cwfitzgerald/sarcasm-rs" }
 maintenance = { status = "actively-maintained" }

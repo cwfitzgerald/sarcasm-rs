@@ -15,6 +15,13 @@ keywords = ["fun", "sarcasm", "text", "encoding", "decoding"]
 members = ["sarcasm-utils"]
 default-members = ["sarcasm-utils"]
 
+[badges]
+appveyor = { repository = "cwfitzgerald/sarcasm-rs" }
+travis-ci = { repository = "cwfitzgerald/sarcasm-rs" }
+is-it-maintained-open-issues = { respository = "cwfitzgerald/sarcasm-rs" }
+is-it-maintained-issue-resolution = { respository = "cwfitzgerald/sarcasm-rs" }
+maintenance = { status = "actively-maintained" }
+
 [dependencies]
 clipboard = "0.5.0"
 chrono = "0.4.7"
