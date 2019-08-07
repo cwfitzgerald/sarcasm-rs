@@ -54,6 +54,8 @@ script:
     fi
 
 before_deploy:
+  - export TC="$TRAVIS_RUST_VERSION"-$TARGET
+  - cargo +TC build --release --package sarcasm --bin sarcasm
   - strip target/release/sarcasm
   - mkdir -p staging/
   - cp target/release/sarcasm staging/
