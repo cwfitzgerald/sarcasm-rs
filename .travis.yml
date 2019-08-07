@@ -10,7 +10,8 @@ addons:
   apt:
     packages:
       - musl-tools
-      - libx11-xcb-dev
+      - libxcb-shape0-dev
+      - libxcb-xfixes0-dev
 
 matrix:
   allow_failures:
